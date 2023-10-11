@@ -40,7 +40,7 @@ export class SigpairAdmin {
     const response = await handleRequest<CreateUserPayload, CreateUserResponse>(
       url,
       headers,
-      createPayload
+      createPayload,
     );
 
     return response.user_id;
@@ -70,7 +70,7 @@ export class SigpairAdmin {
 async function handleRequest<P, R>(
   url: string,
   headers: any,
-  payload: P
+  payload: P,
 ): Promise<R> {
   try {
     const response: AxiosResponse<R, any> = await axios.post(url, payload, {
@@ -81,13 +81,13 @@ async function handleRequest<P, R>(
       return response.data;
     } else {
       throw new Error(
-        `Failed to make request, error:${response.statusText}, code: ${response.status}`
+        `Failed to make request, error:${response.statusText}, code: ${response.status}`,
       );
     }
   } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(
-        `Failed to make request, error:${error.response?.statusText}, code: ${error.response?.status}`
+        `Failed to make request, error:${error.response?.statusText}, code: ${error.response?.status}`,
       );
     } else {
       throw new Error(`Failed to make request, error:${error}`);
@@ -138,15 +138,3 @@ export type GenUserTokenResponse = {
    */
   token: string;
 };
-
-async function main() {
-  const client = new SigpairAdmin(
-    "http://localhost:8080",
-    "1ec3804afc23258f767b9d38825dc7ab0a2ea44ef4adf3254e4d7c6059c3b55a"
-  );
-  const userId = await client.createUser("John Doe");
-  const token = await client.genUserToken(10000, 3600);
-  console.log(userId);
-  console.log(token);
-}
-main();
